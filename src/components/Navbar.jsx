@@ -3,6 +3,7 @@ import Button from "./Button";
 import { TiLocationArrow } from "react-icons/ti";
 import { useWindowScroll } from "react-use";
 import gsap from "gsap";
+import { BiMusic } from "react-icons/bi";
 
 const navItems = ["Nexus", "Vault", "Prologue", "About", "Contact"];
 
@@ -11,53 +12,49 @@ const Navbar = () => {
   const [isIndicatorActive, setIsIndicatorActive] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isNavVisible, setIsNavVisible] = useState(true);
-  const navContainerRef  = useRef(null);
+  const navContainerRef = useRef(null);
   const audioRef = useRef(null);
   const toggleAudioIndicator = () => {
-    setIsAudioPlaying(prev => !prev)
-    setIsIndicatorActive(prev => !prev)
+    setIsAudioPlaying((prev) => !prev);
+    setIsIndicatorActive((prev) => !prev);
   };
 
-  useEffect(()=>{
-    if(isAudioPlaying){
+  useEffect(() => {
+    if (isAudioPlaying) {
       audioRef.current.play();
-    }else{
+    } else {
       audioRef.current.pause();
     }
-  },[isAudioPlaying])
+  }, [isAudioPlaying]);
 
-  const {y:currentScrollY} = useWindowScroll()
+  const { y: currentScrollY } = useWindowScroll();
 
-  useEffect(()=>{
-    if(currentScrollY === 0) {
-        setIsNavVisible(true)
-        navContainerRef.current.classList.remove('floating-nav')
-    }
-    else if(currentScrollY > lastScrollY) {
-        setIsNavVisible(false)
-        navContainerRef.current.classList.add('floating-nav')
-    }
-    else if(currentScrollY < lastScrollY) {
-        setIsNavVisible(true)
-        navContainerRef.current.classList.add('floating-nav')
+  useEffect(() => {
+    if (currentScrollY === 0) {
+      setIsNavVisible(true);
+      navContainerRef.current.classList.remove("floating-nav");
+    } else if (currentScrollY > lastScrollY) {
+      setIsNavVisible(false);
+      navContainerRef.current.classList.add("floating-nav");
+    } else if (currentScrollY < lastScrollY) {
+      setIsNavVisible(true);
+      navContainerRef.current.classList.add("floating-nav");
     }
 
-    setLastScrollY(currentScrollY)
-  }, [currentScrollY, lastScrollY])
-  
-  
+    setLastScrollY(currentScrollY);
+  }, [currentScrollY, lastScrollY]);
 
-  useEffect(()=>{
-    gsap.to(navContainerRef.current , {
-        y : isNavVisible ? 0 : -100,
-        duration : 0.7,
-        opacity : isNavVisible ? 1 : 0
-    })
-  },[isNavVisible])
+  useEffect(() => {
+    gsap.to(navContainerRef.current, {
+      y: isNavVisible ? 0 : -100,
+      duration: 0.7,
+      opacity: isNavVisible ? 1 : 0,
+    });
+  }, [isNavVisible]);
 
   return (
     <div
-      ref={navContainerRef }
+      ref={navContainerRef}
       className="fixed inset-x-0 top-4 z-50 h-16 border-none transition-all duration-700 sm:inset-x-6"
     >
       <header className="absolute top-1/2 -translate-y-1/2 w-full">
@@ -84,6 +81,7 @@ const Navbar = () => {
             <button
               className="ml-10 flex items-center space-x-0.5"
               onClick={toggleAudioIndicator}
+              title="Play/Pause Music"
             >
               <audio
                 ref={audioRef}
@@ -91,9 +89,20 @@ const Navbar = () => {
                 className="hidden"
                 loop
               />
-              {[1, 2, 3, 4].map((bar) => (
-                <div key={bar} className={`indicator-line ${isIndicatorActive ? 'active': ''}`} style={{animationDelay : `${bar*0.1}s`}}/>
-              ))}
+              {!isIndicatorActive ? (
+                <BiMusic size={24} className="text-white hover:bg-gray-700 rounded-full p-[5px]" />
+
+              ) : (
+                [1, 2, 3, 4].map((bar) => (
+                  <div
+                    key={bar}
+                    className={`indicator-line ${
+                      isIndicatorActive ? "active" : ""
+                    }`}
+                    style={{ animationDelay: `${bar * 0.1}s` }}
+                  />
+                ))
+              )}
             </button>
           </div>
         </nav>

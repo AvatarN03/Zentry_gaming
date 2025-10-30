@@ -95,7 +95,7 @@ const Hero = () => {
         id="video-frame"
         className="relative z-10 h-dvh w-screen overflow-hidden rounded-lg bg-blue-75"
       >
-        <div>
+        <div id="nexus">
           <div className="mask-clip-path absolute-center absolute z-50 size-64 cursor-pointer rounded-lg overflow-hidden">
             <div
               onClick={handleMiniVdClick}
