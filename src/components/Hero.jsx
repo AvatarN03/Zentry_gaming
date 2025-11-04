@@ -34,30 +34,43 @@ const Hero = () => {
 
   const getVideoSrc = (index) => `videos/hero-${index}.mp4`;
 
-  useGSAP(()=>{
-    if(hasClicked)
-    {
-      gsap.set('#next-video', {visibility:'visible'})
-      gsap.to("#next-video", {
-        transformOrigin:'center center',
-        scale: 1,
+ useGSAP(() => {
+  if (hasClicked) {
+    const tl = gsap.timeline({
+      defaults: { ease: "power1.inOut" }
+    });
+
+    // Show and expand the next video
+    tl.set("#next-video", { visibility: "visible", scale: 1 })
+      .to("#next-video", {
         width: "100%",
         height: "100%",
-        duration:1,
-        ease:"power1.inOut",
-       
-        onStart: ()=> nextVideoRef.current.play()
-
+        duration: 1,
+        onStart: () => nextVideoRef.current.play()
       })
-      gsap.to("#current-video", {
-        transformOrigin:'center center',
+      // Hide the current video
+      .to("#current-video", {
         scale: 0,
-        duration:0.5,
-        ease:"power1.inOut",
+        duration: 0.3
+      }, "<")
+      // 👇 Reset current video box for next cycle
+      .set("#current-video", {
+        scale: 0.8,
+        opacity: 0,
+        visibility: "visible",
+        borderRadius:"50px",
+        boxShadow: "0 0 10px purple"
       })
-    }
+      .to("#current-video", {
+        opacity: 1,
+        duration: 0.3,
+        delay: 0.1
+      });
 
-  }, {dependencies:[currentIndex], revertOnUpdate:true})
+    setHasClicked(false); // reset click flag for next hover
+  }
+}, { dependencies: [currentIndex], revertOnUpdate: true });
+
 
   useGSAP(()=>{
     gsap.set("#video-frame", {
